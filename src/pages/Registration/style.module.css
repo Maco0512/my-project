@@ -1,0 +1,41 @@
+#detailed-input {
+  font-size: initial !important;
+  line-height: initial !important;
+}
+select,
+input {
+  /* display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid rgb(0, 0, 0);
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  font-size: 14px; */
+}
+
+/*Style list optional */
+textarea {
+  max-width: 395px;
+  min-width: 175px;
+  resize: both;
+  max-height: 150px;
+  min-height: 30px;
+}
+
+input[type="submit"],
+.button {
+  background: #00d1b2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  width: 10%;
+  line-height: 20px !important;
+  margin: auto;
+}
+#default-label {
+  margin-left: 20px;
+}
