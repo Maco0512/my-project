@@ -3,51 +3,59 @@ import React, { useState, useMemo, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Search from "../../components/Table/Search";
 import Pagination from "../../components/Table/Pagination";
-import Head from "../../components/Table//Header";
 
-import { getItems, deleteItem } from "../../api/itemAPI";
-
+import axios from "axios";
 import UserContext from "../../context/UserContext";
 // import DialogAction from '../DialogAction'
+import { getItems, deleteItem } from "../../api/collectionAPI";
 export default function List(props) {
   const ctx = useContext(UserContext);
-  let role = JSON.parse(localStorage.getItem("roles"));
 
-  // const [hasItem, setHasItem] = useState(false);
   const [items, setItems] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState({ field: "", order: "" });
+  // const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEM_PER_PAGE = 3;
-
+  const [showDelete, setShowDelete] = useState(false);
+  const checkUser = () => {
+    ctx.state.role === "registrar" && setShowDelete(true);
+    ctx.state.role === "admin" && setShowDelete(true);
+    ctx.state.role === "expert" && setShowDelete(true);
+  };
   useEffect(() => {
     const fetchItems = async () => {
       await getItems().then((result) => {
         setItems(result.data);
       });
       // setHasItem(true);
-
       // setItems(list.data);
       // setHasItem(true);
     };
+
     fetchItems();
+    checkUser();
   }, []);
 
-  const handleClick = (id) => {
-    // async
-    // const result = Confirm(
-    //   "Та устгахдаа итгэлтэй байна уу",
-    //   "Сonfirmation title"
-    // );
-    // if (result) {
-    //   await deleteItem(id);
-    //   // Сonfirmation confirmed
-    // } else {
-    //   // Сonfirmation not confirmed
-    // }
+  const onDelete = ({ id }) => {
+    // const result = confirmAlert({
+    //   title: "Та устгах гэж байна",
+    //   message: "Үүнийг хийнэ гэдэгтээ итгэлтэй байнуу",
+    //   buttons: [
+    //     {
+    //       label: "Yes",
+    //       onClick: () => true,
+    //     },
+    //     {
+    //       label: "No",
+    //       onClick: () => false,
+    //     },
+    //   ],
+    // });
+    // if (result)
+    //   await axios.delete("http://localhost:8000/api/v1/collection", { id: id });
   };
 
   // const responseHandler=(res)=> {
@@ -61,8 +69,8 @@ export default function List(props) {
       console.log(computedItems);
       computedItems = computedItems.filter(
         (item) =>
-          item.Specimen_names.toLowerCase().includes(search.toLowerCase()) ||
-          item.Finder.toLowerCase().includes(search.toLowerCase())
+          item.catalog_no.toLowerCase().includes(search.toLowerCase()) ||
+          item.field_no.toLowerCase().includes(search.toLowerCase())
       );
     }
 
@@ -75,68 +83,56 @@ export default function List(props) {
   return (
     <div className="content">
       <div className="container">
-        {/* <h4 className="card-title">Item list</h4>
-          <p className="card-category">Category </p> */}
         <div className="card">
-          <div className="card-header">
+          <div className="card-content">
             <Search
               onSearch={(value) => {
                 setSearch(value);
                 setCurrentPage(1);
               }}
             />
-          </div>
-          <br />
-          {/* <div className="select">
-              <select className="form-control" id="locale">
-                <option value="af-ZA">af-ZA</option>
-                <option value="ar-SA">ar-SA</option>
-              </select>
-            </div> */}
-
-          <div className="card-content">
             <table className="table ">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Registration Number</th>
-                  <th>Spicemen name</th>
-                  <th>Finder</th>
-                  <th>Place where to saving</th>
-                  {role[0] !== "researcher" && <th>Action</th>}
+                  <th>Цуглуулгын дугаар</th>
+                  <th>Хээрийн дугаар</th>
+                  <th>Хуулбарласан аргачлал</th>
+                  <th>Бүртгэсэн</th>
+                  <th>Үйлдлүүд</th>
                 </tr>
               </thead>
               <tbody>
                 {itemsData.map((item) => (
                   <tr key={item._id}>
                     <td>
-                      <label>{item.Frame_num}</label>
+                      <label>{item.catalog_no}</label>
                     </td>
                     <td>
-                      <label>{item.Registeration_num}</label>
+                      <label>{item.field_no}</label>
                     </td>
                     <td>
-                      <label>{item.Specimen_names}</label>
+                      <label>{item.repro_method}</label>
                     </td>
                     <td>
-                      <label>{item.Finder}</label>
+                      <label>{item.cataloger}</label>
                     </td>
                     <td>
-                      <label>{item.Place_where_to_saving}</label>
-                    </td>
-                    {role[0] !== "researcher" && (
-                      <td>
-                        <div>
-                          <Link to={`detailed-item/${item._id}`}>
-                            <i className="fas fa-info-circle"></i>
-                          </Link>
+                      <div>
+                        <Link to={`detailed-item/${item._id}/collection`}>
+                          <i className="fas fa-info-circle"></i>
+                        </Link>
+                        {showDelete && (
                           <i
-                            class="fas fa-trash"
-                            onClick={handleClick(item._id)}
+                            className="fas fa-trash"
+                            onClick={() =>
+                              onDelete({
+                                id: item._id,
+                              })
+                            }
                           ></i>
-                        </div>
-                      </td>
-                    )}
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

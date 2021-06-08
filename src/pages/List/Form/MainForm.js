@@ -1,41 +1,36 @@
-import React from "react";
-import apiAttribute from "../../../api/apiAttribute";
-import defaultAttribute from "../../../api/defaultAttribute";
+import React, { useEffect, useState } from "react";
+import getAttribute from "../../../api";
+// import defaultAttribute from "../../../api/defaultAttribute";
 
 export const MainForm = ({ register, type, useDefault }) => {
   // const ischanged = useState(true);
   // const dino = apiAttribute("dino");
-  // const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]);
   // const [arr1, setArr1] = useState([]);
   // const [arr2, setArr2] = useState([]);
-  const items = apiAttribute(type);
+  useEffect(() => {
+    const obj = getAttribute(type);
+    setItems(obj);
+  }, [type]);
 
-  const defaults = useDefault === true ? defaultAttribute(type) : "";
+  // const defaults = useDefault === true ? defaultAttribute(type) : "";
   // const arr1 = items !== undefined && items.slice(0, items.length / 2 + 2);
   // const arr2 = items !== undefined && items.slice(items.length / 2 + 2);
+  const tifOptions = [];
+
+  // for (const [key, value] of Object.entries(tifs)) {
+  //   tifOptions.push(
+  //     <option value={key} key={key}>
+  //       {value}
+  //     </option>
+  //   );
+  // }
+
   return (
     <div className="columns is-gapless is-multiline is-mobile ">
-      {items.map((e, i) => (
-        // <div className="column">
-        <div className="column is-half" key={e + i}>
-          {/* <div className="column">
-            <div className="columns"> */}
-
-          <label className="column is-one-third">{e}</label>
-          {e === "Registeration_num" ? (
-            <div className="field">
-              <div className="control">
-                <input className="column is-half input is-danger" type="text" />
-              </div>
-              <p className="help is-danger">This field is required</p>
-            </div>
-          ) : (
-            <input className="column is-half" />
-          )}
-
-          {/* <div className="column"></div> */}
-          {/* </div>
-          </div> */}
+      {Object.keys(items).map((key) => (
+        <div key={key} value={key}>
+          {items[key]}
         </div>
       ))}
     </div>

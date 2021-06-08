@@ -1,0 +1,169 @@
+.Notifications {
+  margin-right: 25px;
+  z-index: 7;
+}
+
+.Notifications {
+  position: relative;
+}
+
+.Notification_dd {
+  z-index: 7;
+  position: absolute;
+  top: 48px;
+  right: -2px;
+  user-select: none;
+  background: #fff;
+  border: 1px solid #c7d8e2;
+  width: 450px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 10px 10px 35px rgba(0, 0, 0, 0.125),
+    -10px -10px 35px rgba(0, 0, 0, 0.125);
+}
+
+.Notification_dd:before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: 15px;
+  border: 10px solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+.Notification_dd li {
+  border-bottom: 1px solid #f1f2f4;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.Notification_dd li .notify_icon {
+  display: flex;
+}
+
+.Notification_dd li .notify_icon .icon {
+  display: inline-block;
+  background: url("https://i.imgur.com/MVJNkqW.png") no-repeat 0 0;
+  width: 40px;
+  height: 42px;
+}
+
+.Notification_dd li.baskin_robbins .notify_icon .icon {
+  background-position: 0 -43px;
+}
+
+.Notification_dd li.mcd .notify_icon .icon {
+  background-position: 0 -86px;
+}
+
+.Notification_dd li.pizzahut .notify_icon .icon {
+  background-position: 0 -129px;
+}
+
+.Notification_dd li.kfc .notify_icon .icon {
+  background-position: 0 -178px;
+}
+
+.Notification_dd li .notify_data {
+  margin: 0 15px;
+  width: 185px;
+}
+
+.Notification_dd li .notify_data .title {
+  color: #000;
+  font-weight: 600;
+}
+
+.Notification_dd li .notify_data .sub_title {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 5px;
+}
+
+.Notification_dd li .notify_status p {
+  font-size: 12px;
+}
+
+.Notification_dd li.success .notify_status p {
+  color: #47da89;
+}
+
+.Notification_dd li.failed .notify_status p {
+  color: #fb0001;
+}
+
+.Notification_dd li.show_all {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.Notification_dd li.show_all p {
+  font-weight: 700;
+  color: #3b80f9;
+  cursor: pointer;
+}
+
+.Notification_dd li.show_all p:hover {
+  text-decoration: underline;
+}
+
+.Popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s ease;
+}
+
+.Popup .shadow {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.5;
+}
+
+.Popup .inner_Popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: auto;
+}
+
+.Popup .notification_dd {
+  display: block;
+  position: static;
+  margin: 0 auto;
+  height: 357px;
+  overflow: auto;
+}
+
+.Popup .notification_dd:before {
+  display: none;
+}
+
+.Popup .notification_dd li.title {
+  font-weight: 700;
+  color: #3b80f9;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.Popup .notification_dd li.title .close {
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.Popup .notification_dd li.title .close:hover {
+  opacity: 0.5;
+}

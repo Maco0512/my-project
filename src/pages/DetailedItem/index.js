@@ -1,31 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { getItem, updateItem } from "../../api/itemAPI";
-import apiAttribute from "../../api/apiAttribute";
+import { useParams, Link } from "react-router-dom";
+import { getItem, updateItem } from "../../api/fossilAPI";
+import apiAttribute from "../../api";
 import img1 from "../../assets/pageImg/f1.jpg";
 import img2 from "../../assets/pageImg/f2.jpg";
+import axios from "axios";
+
+import UserContext from "../../context/UserContext";
 function DetailedItem() {
+  const ctx = useContext(UserContext);
+
   const { register, handleSubmit } = useForm({
     defaultValues: { type: "changed" ? "test" : "" },
   });
 
   const param = useParams();
-  const columnsData = apiAttribute("dino");
+  const columnsData = apiAttribute(param.type);
 
   const [inEditMode, setInEditMode] = useState({
     status: false,
   });
+  const [updated, setUpdated] = useState(false);
   const [list, setList] = useState([]);
-
+  const [showEdit, setShowEdit] = useState(true);
+  const checkUserEdit = (e) => {
+    if (e === "fossil") {
+      ctx.state.role === "treasurer" && setShowEdit(false);
+      ctx.state.role === "registrar" && setShowEdit(false);
+    }
+    if (e === "treasury") {
+      ctx.state.role === "researcher" && setShowEdit(false);
+      ctx.state.role === "registrar" && setShowEdit(false);
+    }
+    if (e === "collection") {
+      ctx.state.role === "treasurer" && setShowEdit(false);
+      ctx.state.role === "researcher" && setShowEdit(false);
+    }
+  };
   useEffect(() => {
     const fetchItems = async () => {
-      const list = await getItem(param.id);
-      console.log(list);
-      setList(list.data);
+      await axios
+        .get(`http://localhost:8000/api/v1/${param.type}/${param.id}`)
+        .then((e) => {
+          let data = e.data.data;
+          if (param.type === "fossil") {
+            let meridian = { ...e.data.data.meridian };
+            data = { ...meridian, ...data };
+          }
+          setList(data);
+        });
+      // setList(list.data)
     };
     fetchItems();
-  }, []);
+    checkUserEdit(param.type);
+
+    return () => {
+      setList(null);
+    };
+  }, [updated]);
 
   const onEdit = (event) => {
     event.preventDefault();
@@ -34,59 +67,64 @@ function DetailedItem() {
     });
   };
   const onCancel = () => {
-    // reset the inEditMode state value
     setInEditMode({
       status: false,
     });
   };
 
-  const submitHandler = handleSubmit((data) => {
-    data._id = list._id;
-    Object.entries(data).toString() === Object.entries(list).toString()
-      ? console.log(" is  not changed")
-      : console.log("changed");
+  const submitHandler = handleSubmit(async (data) => {
+    console.log(data);
+    await axios
+      .put(`http://localhost:8000/api/v1/${param.type}/${param.id}`, data)
+      .then((e) => {
+        setList(e.data.data);
 
-    // await new updateItem(data, data.id);
+        setUpdated(true);
+      });
+
+    setInEditMode({
+      status: false,
+    });
   });
 
   return (
-    <div className="content">
-      <div className="container">
+    <section className="hero">
+      <div className="hero-body">
         <div className="columns">
-          <div className="col-md-8 column">
+          <div className="column is-two-thirds">
             <div className="card ">
-              <div className="card-header ">
-                <h4 className="card-title">Detailed Item</h4>
+              <div className="card-header">
+                {/* <Link
+                  className="card-header-icon"
+                  to={`collection-registration/:${list.catalag_no}`}
+                >
+                  Цуглуулга бүртгэх
+                </Link>
+                <Link
+                  className="card-header-icon"
+                  to={`treasury-registration/:${list.catalag_no}`}
+                >
+                  Сан хөмрөг бүртгэх
+                </Link> */}
               </div>
-              <br />
               <form onSubmit={submitHandler}>
-                <div className="card-body">
-                  {/* <div className="left">{left}</div>
-            <div className="right">{right}</div> */}
-                  {columnsData.map((e) => (
-                    <div key={e} className="columns">
-                      <div className="col-4 column">
-                        <label>{e}:</label>
+                <div className="card-content">
+                  {Object.keys(columnsData).map((key, i) => (
+                    <div key={key + i} className="columns">
+                      <div className="is-one-fifth column">
+                        <label className="label">{columnsData[key]}:</label>
                       </div>
-                      <div className="col-7 column">
+                      <div className="column">
                         {inEditMode.status ? (
-                          e !== "Contents" ? (
-                            <input
-                              name={e}
-                              type="text"
-                              // ref={register}
-                              defaultValue={list[e]}
-                            />
-                          ) : (
-                            <textarea
-                              name={e}
-                              type="text"
-                              // ref={register}
-                              defaultValue={list[e]}
-                            />
-                          )
+                          <input
+                            className="input"
+                            name={key}
+                            type="text"
+                            {...register(key)}
+                            defaultValue={list[key]}
+                          />
                         ) : (
-                          <label>{list[e]}</label>
+                          list && <label>{list[key]}</label>
                         )}
                       </div>
                     </div>
@@ -97,14 +135,14 @@ function DetailedItem() {
                     <React.Fragment>
                       <button
                         type="submit"
-                        className={"btn btn-edit"}
+                        className={"button card-footer-item"}
                         // onClick={() => onSave({})}
                       >
                         Save
                       </button>
 
                       <button
-                        className={"btn btn-edit"}
+                        className={"button card-footer-item"}
                         style={{ marginLeft: 8 }}
                         onClick={onCancel}
                       >
@@ -112,35 +150,41 @@ function DetailedItem() {
                       </button>
                     </React.Fragment>
                   ) : (
-                    <button
-                      type="button"
-                      className={"btn btn-edit"}
-                      onClick={onEdit}
-                    >
-                      Edit
-                    </button>
+                    showEdit && (
+                      <button
+                        type="button"
+                        className="button card-footer-item"
+                        onClick={onEdit}
+                      >
+                        Edit
+                      </button>
+                    )
                   )}
                 </div>
               </form>
             </div>
           </div>
-          <div className="col-md-4 column">
-            <div className="card">
-              <div className="card-image">
-                <img className="" src={img1} alt="..." />
-              </div>
-              <div className="card-image">
-                <img className="" src={img2} alt="..." />
-              </div>
-              <div className="card-body">
-                <div className="author"></div>
-                <input type="file" className="description text-center" />
-              </div>
-            </div>
-          </div>
+          {/* // {list && list.image && (
+          //   <div className="column">
+          //     <div className="card">
+          //       <div className="card-image">
+          //         <img
+          //           className=""
+          //           src={require(`../../backend-complete/public/upload/${list.image}`)}
+          //           alt="..."
+          //         />
+          //       </div>
+
+          //       <div className="card-body">
+          //         <div className="author"></div>
+          //         <input type="file" className="description text-center" />
+          //       </div>
+          //     </div>
+          //   </div>
+          // )} */}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -12,51 +12,48 @@ const Home = () => {
             role="navigation"
             aria-label="Main Navigation"
           >
-            <div className="container">
-              <div className="navbar-brand" style={{ marginTop: 10 }}>
-                <a href="#" className="navbar-item">
-                  <img
-                    src={require("../../assets/pageImg/logo.png")}
-                    alt="Logo"
-                  />
-                  <div className="article">
-                    <p
-                      className="title is-7"
-                      style={{
-                        marginLeft: 12,
-                        color: "#0a0078",
-                        letterSpacing: "0.3px",
-                      }}
-                    >
-                      МОНГОЛ УЛСЫН ШИНЖЛЭХ УХААНЫ АКАДЕМИ
-                    </p>
-                    <p
-                      className="subtitle is-4"
-                      style={{
-                        color: "#0a0078",
-                        marginLeft: 11,
-                      }}
-                    >
-                      ПАЛЕОНТОЛОГИЙН ХҮРЭЭЛЭН
-                    </p>
-                  </div>
+            {/* <div className="container"> */}
+            <div className="navbar-brand" style={{ marginTop: "10px" }}>
+              <a href="#" className="navbar-item">
+                <img
+                  src={require("../../assets/pageImg/logo.png")}
+                  alt="Logo"
+                />
+                <div className="article">
+                  <p
+                    className="title is-6"
+                    style={{
+                      marginLeft: "12px",
+                      color: "#0a0078",
+                      letterSpacing: "0.3px",
+                    }}
+                  >
+                    МОНГОЛ УЛСЫН ШИНЖЛЭХ УХААНЫ АКАДЕМИ
+                  </p>
+                  <p
+                    className="subtitle is-4"
+                    style={{
+                      color: "#0a0078",
+                      marginLeft: "11px",
+                    }}
+                  >
+                    ПАЛЕОНТОЛОГИЙН ХҮРЭЭЛЭН
+                  </p>
+                </div>
+              </a>
+            </div>
+            <div className="navbar-menu is-uppercase" style={{ marginTop: 10 }}>
+              <div className="navbar-end">
+                <a
+                  href="#contact"
+                  className="navbar-item"
+                  style={{ color: "#4d3cf8" }}
+                >
+                  Холбоо барих
                 </a>
               </div>
-              <div
-                className="navbar-menu is-uppercase"
-                style={{ marginTop: 10 }}
-              >
-                <div className="navbar-end">
-                  <a
-                    href="#contact"
-                    className="navbar-item"
-                    style={{ color: "#4d3cf8" }}
-                  >
-                    Холбоо барих
-                  </a>
-                </div>
-              </div>
             </div>
+            {/* </div> */}
           </nav>
         </div>
         <div className="hero-body">
@@ -86,7 +83,7 @@ const Home = () => {
       <section className="section">
         <div className="container">
           <div className="columns has-text-centered is-one-thirds">
-            <div className="column is-one-thirds">
+            {/* <div className="column is-one-thirds">
               <div className="field">
                 <p className="title is-5 is-spaced">Холбоос</p>
                 <p className="subtitle is-6" style={{ marginBottom: "0.3rem" }}>
@@ -105,7 +102,7 @@ const Home = () => {
                   Холбоо барих
                 </p>
               </div>
-            </div>
+            </div> */}
             <div className="column is-one-thirds">
               <div className="field">
                 <p className="title is-5" style={{ paddingBottom: 20 }}>

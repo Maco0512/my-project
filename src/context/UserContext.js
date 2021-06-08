@@ -10,15 +10,17 @@ const initialState = {
   errorCode: null,
   token: null,
   userId: null,
+  role: null,
+  branch: null,
 };
 
 export const UserStore = (props) => {
   const [state, setState] = useState(initialState);
 
-  const loginUserSucces = (token, userId) => {
+  const loginUserSucces = (token, userId, role, branch) => {
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
-    // localStorage.setItem("role", role);
+    localStorage.setItem("role", role);
     // localStorage.setItem("expireDate", expireDate);
     // localStorage.setItem("refreshToken", refreshToken);
     setState({
@@ -28,6 +30,8 @@ export const UserStore = (props) => {
       errorCode: null,
       token,
       userId,
+      role,
+      branch,
       // user: {
       //   createdAt: "",
       //   email: "",
@@ -41,6 +45,7 @@ export const UserStore = (props) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("role");
     setState(initialState);
   };
 
@@ -100,11 +105,14 @@ export const UserStore = (props) => {
 
         const token = result.data.token;
         const userId = result.data.user._id;
+        const role = result.data.user.role;
+        const branch = result.data.user.branch;
 
         localStorage.setItem("token", token);
         localStorage.setItem("userId", userId);
+        localStorage.setItem("role", role);
 
-        loginUserSucces(token, userId);
+        loginUserSucces(token, userId, role, branch);
         // dispatch(actions.autoLogoutAfterMillisec(expiresIn * 1000));
       })
       .catch((err) => {
@@ -112,50 +120,50 @@ export const UserStore = (props) => {
           // err.response.data.error.message
           ...state,
           logginIn: false,
-          error: err.message,
+          error: err.response.data.error.message,
           errorCode: err.code,
           token: null,
           userId: null,
+          role: null,
         });
       });
   };
 
-  const signupUser = (name, email, password, role) => {
+  const signupUser = (name, email, password, role, branch) => {
     setState({ ...state, saving: true });
-
     const data = {
+      branch,
       role,
       email,
       name,
       password,
     };
-    console.log(data);
+    if (role === "admin" || role === "expert") delete data.branch;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + state.token,
+    };
 
-    axios({
-      method: "post",
-      url: "http://localhost:8000/api/v1/users/",
-      body: data,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYTAxNWE4NDQ0ODAyMmY1MGM1OGJlNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYxOTQwNjU4MiwiZXhwIjoxNjIxOTk4NTgyfQ.3KPQ4q7RJDJMCoxTHB6YXCEDXoOCADRhKKfUhvIaScY",
-      },
-    })
+    axios
+      .post("http://localhost:8000/api/v1/users/", data, {
+        headers: headers,
+      })
       .then((result) => {
         // LocalStorage ruu hadgalna
-        const token = result.data.idToken;
-        const userId = result.data._id;
+        console.log("Амжилттай үүсгэлээ");
+        // const token = result.data.idToken;
+        // const userId = result.data._id;
+        // const role = result.data.user.role;
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId);
+        // localStorage.setItem("token", token);
+        // localStorage.setItem("userId", userId);
 
         setState({
           ...state,
           saving: false,
-          token,
-          userId,
+          // token,
+          // userId,
+          // role,
           error: null,
           errorCode: null,
         });
@@ -163,10 +171,12 @@ export const UserStore = (props) => {
       .catch((err) => {
         setState({
           ...state,
-          saving: false,
-          token: null,
-          userId: null,
-          error: err.message,
+          // saving: false,
+          // token: null,
+          // userId: null,
+          // role: null,
+          // branch:null,
+          error: err.response.data.error.message,
           errorCode: err.code,
         });
       });

@@ -6,7 +6,13 @@ import * as Routes from "./index";
 import Navigation from "../components/Navigation";
 import NotFound from "../components/NotFound";
 
-import DetailedItem from "../pages/DetailedItem/index";
+import DetailedItem from "../pages/DetailedItem";
+import Registration from "../pages/Registration/FossilRegistration";
+import Classification from "../components/subRegistration/Classification";
+
+import FossilList from "../pages/List/FossilList";
+import TreasuryList from "../pages/List/TreasuryList";
+import CollectionList from "../pages/List/CollectionList";
 
 function PrivateRoutes(props) {
   const [allowedRoutes, setallowedRoutes] = useState([]);
@@ -31,15 +37,19 @@ function PrivateRoutes(props) {
   // }
   useEffect(() => {
     console.log(props.match.path);
-    // let token = JSON.parse(localStorage.getItem("token"));
-    let roles = JSON.parse(localStorage.getItem("roles"));
-    if (roles) {
-      roles = ["common", ...roles];
+
+    let token = localStorage.getItem("token");
+    let role = localStorage.getItem("role");
+    if (token) {
+      //
+      let roles = ["common", role];
       let allowedRoutes = roles.reduce((acc, role) => {
+        console.log(acc);
         return [...acc, ...rolesConfig[role].routes];
       }, []);
       // For removing duplicate entries, compare with 'url'.
       allowedRoutes = uniqBy(allowedRoutes, "url");
+      console.log(allowedRoutes);
       setallowedRoutes(allowedRoutes);
     }
   }, []);
@@ -58,8 +68,25 @@ function PrivateRoutes(props) {
         ))}
         <Route
           exact
-          path={`${props.match.path}/detailed-item/:id`}
+          path={`${props.match.path}/detailed-item/:id/:type`}
           component={DetailedItem}
+        />
+        {/* <Route path="/register" component={Registration} /> */}
+        <Route
+          path={`${props.match.path}/class-registration`}
+          component={Classification}
+        />
+        <Route
+          path={`${props.match.path}/fossil-list`}
+          component={FossilList}
+        />
+        <Route
+          path={`${props.match.path}/treasury-list`}
+          component={TreasuryList}
+        />
+        <Route
+          path={`${props.match.path}/collection-list`}
+          component={CollectionList}
         />
         <Route component={NotFound} />
       </Switch>

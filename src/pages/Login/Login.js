@@ -48,34 +48,11 @@ const Login = (props) => {
   };
 
   const handleClick = () => {
-    console.log(form.email, form.password);
     ctx.loginUser(form.email, form.password);
-
-    // axios
-    //   .post("http://localhost:8000/api/v1/users/login", {
-    //     email: form.email,
-    //     password: form.password,
-    //   })
-    //   .then((result) => console.log(result))
-    //   .catch((err) => setError(err.response.data.error.message));
-
-    localStorage.setItem("roles", JSON.stringify(selected));
-    history.push("/app");
   };
 
   return (
     <form className="box">
-      <div className="field">
-        <label className="label">Эрх</label>
-
-        <div className="select is-multiple">
-          <select multiple size="3" value={selected} onChange={handleChange}>
-            <option value="admin">Admin</option>
-            <option value="branchExpert">Expert</option>
-            <option value="researcher">Researcher</option>
-          </select>
-        </div>
-      </div>
       <div className="field">
         <label className="label">Таны нэр</label>
         <div className="control has-icons-left">
@@ -109,9 +86,9 @@ const Login = (props) => {
             <input type="checkbox" id="checkbox" className="regular-checkbox" />
             Remember me
           </div> */}
-          <Link to="/forgot-password" className="btn btn-link level-right">
+          {/* <Link to="/forgot-password" className="btn btn-link level-right">
             Forgot Password
-          </Link>
+          </Link> */}
         </div>
       </div>
       {/* {error && <div className="notification is-warning">{error}</div>} */}
@@ -127,7 +104,6 @@ const Login = (props) => {
         type="button"
         className="button is-primary is-small is-rounded is-hover"
         onClick={handleClick}
-        disabled={!selected.length}
       >
         НЭВТРЭХ
       </button>
@@ -136,9 +112,5 @@ const Login = (props) => {
     </form>
   );
 };
-
-Login.propTypes = {};
-
-Login.defaultProps = {};
 
 export default Login;

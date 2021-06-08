@@ -1,44 +1,44 @@
 // component's config object.
 const components = {
-  admin: {
-    component: "AdminOnly",
-    url: "/admin-only",
-    title: "Admin Only",
-    icon: "menu",
-    module: 1,
-  },
+  // admin: {
+  //   component: "AdminOnly",
+  //   url: "/admin-only",
+  //   title: "Admin Only",
+  //   icon: "menu",
+  //   module: 1,
+  // },
   users: {
     component: "Users",
     url: "/users",
-    title: "Users",
+    title: "Хэрэглэгч",
     icon: "menu",
     module: 1,
   },
-  list: {
-    component: "List",
-    url: "/list",
-    title: "List",
-    icon: "menu",
-    module: 1,
-  },
-  // customers: {
-  // 	component: 'Customers',
-  // 	url: '/customers',
-  // 	title: 'Customers',
-  // 	icon: 'menu',
-  // 	module: 1
+  // list: {
+  //   component: "List",
+  //   url: "/list",
+  //   title: "Жагсаал",
+  //   icon: "menu",
+  //   module: 1,
   // },
-  registration: {
-    component: "Registration",
-    url: "/registration",
-    title: "Registration",
+  collection: {
+    component: "CollectionRegistration",
+    url: "/collection-registration",
+    title: "Цуглууга бүртгэл",
     icon: "menu",
     module: 1,
   },
-  approval: {
-    component: "Approval",
-    url: "/approval",
-    title: "Approval",
+  treasury: {
+    component: "TreasuryRegistration",
+    url: "/treasury-registration",
+    title: "Сан хөмрөг бүртгэл",
+    icon: "menu",
+    module: 1,
+  },
+  registration: {
+    component: "FossilRegistration",
+    url: "/fossil-registration",
+    title: "Олдвор бүртгэл",
     icon: "menu",
     module: 1,
   },
@@ -58,25 +58,31 @@ const rolesConfig = {
   admin: {
     routes: [...Object.values(components)],
   },
-  branchExpert: {
-    routes: [components.approval, components.registration, components.list],
+  expert: {
+    routes: [components.users],
   },
   researcher: {
-    routes: [components.registration, components.list],
+    routes: [components.registration],
+  },
+  treasurer: {
+    routes: [components.treasury],
+  },
+  registrar: {
+    routes: [components.collection],
   },
   common: {
     routes: [
       {
         component: "Dashboard",
         url: "/",
-        title: "Dashboard",
+        title: "Самбар",
         icon: "menu",
         module: 1,
       },
       {
         component: "Profile",
         url: "/profile",
-        title: "Profile",
+        title: "Профайл",
         icon: "menu",
         module: 1,
       },

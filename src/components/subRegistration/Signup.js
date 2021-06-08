@@ -1,16 +1,38 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 
+import Select from "../../components/General/MultiSelect";
+import Spinner from "../../components/General/Spinner";
 export default function Signup(props) {
   const ctx = useContext(UserContext);
 
   const [error, setError] = useState(null);
+  const [hasBranch, setHasBranch] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     password1: "",
   });
+  const [selectedRole, setSelectedRole] = useState("admin");
+
+  const changeRole = (e) => {
+    setSelectedRole(e.target.value);
+    checkRole(e.target.value);
+  };
+
+  const [branch, setBranch] = useState([]);
+  const changeBranch = (e) => {
+    setBranch(e);
+  };
+
+  useEffect(() => {
+    !hasBranch && setBranch(null);
+    // return () => {
+    //   cleanup;
+    // };
+  }, [selectedRole]);
+
   const changeName = (e) => {
     const newName = e.target.value;
     setForm((formBefore) => ({
@@ -52,14 +74,15 @@ export default function Signup(props) {
     }));
   };
 
-  const [selected, setSelected] = useState();
-
-  const handleChange = (e) => {
-    setSelected(e.target.value);
+  //////////////////////////////
+  const checkRole = (role) => {
+    if ("researcher" === role) setHasBranch(true);
+    else setHasBranch(false);
   };
 
   const handleClick = () => {
-    ctx.signupUser(form.name, form.email, form.password, selected);
+    console.log(form.name, form.email, form.password, selectedRole, branch);
+    ctx.signupUser(form.name, form.email, form.password, selectedRole, branch);
 
     // axios
     //   .post("http://localhost:8000/api/v1/users/login", {
@@ -71,17 +94,24 @@ export default function Signup(props) {
   };
   return (
     <form className="box">
-      <div className="field">
-        <label className="label">Эрх</label>
-
-        <div className="select is-multiple">
-          <select multiple size="3" onChange={handleChange}>
-            <option value="admin">Admin</option>
-            <option value="branchExpert">Expert</option>
-            <option value="researcher">Researcher</option>
+      <div className="field columns">
+        <label className="label column is-one-quarter">Эрх</label>
+        <div className="select">
+          <select onChange={changeRole} className="column">
+            <option value="admin">Админ</option>
+            <option value="expert">Салбарын мэргэжилтэн</option>
+            <option value="researcher">Судлаач</option>
+            <option value="registrar">Бүртгэл мэдээллийн санч</option>
+            <option value="treasurer">Сан хөмрөгч</option>
           </select>
         </div>
       </div>
+      {hasBranch && (
+        <div className="field columns">
+          <label className="label column is-one-quarter">Салбар</label>
+          <Select changeBranch={changeBranch} />
+        </div>
+      )}
       <div className="field">
         <label className="label">Таны имейл</label>
         <div className="control has-icons-left">
@@ -149,15 +179,12 @@ export default function Signup(props) {
           </span>
         </div>
       </div>
-      {/* {error && <div className="notification is-warning">{error}</div>} */}
-      {/* {ctx.state.logginIn && <Spinner />}
+      {ctx.state.logginIn && <Spinner />}
       {ctx.state.error && (
         <div className="notification is-warning" style={{ color: "red" }}>
           {ctx.state.error}
         </div>
-      )} */}
-
-      {/* <Link to="/dashboard"> */}
+      )}
       <button
         type="button"
         className="button is-primary is-small is-rounded is-hover"

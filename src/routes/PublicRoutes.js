@@ -24,7 +24,6 @@ const PublicRoutes = ({ match }) => (
   <Fragment>
     <Switch>
       <Route path="/forgot-password" component={ForgotPassword} />
-      <Route path="/register" component={Register} />
       {/* <Route exact path="/login" component={Login} /> */}
       <Route path="/login" component={Login} />
       <Route exact path="/" component={Home} />

@@ -6,28 +6,36 @@ import Home from "../Home";
 import history from "../../util/history";
 import UserContext from "../../context/UserContext";
 
+import "./main.css";
 function App() {
   const userCtx = useContext(UserContext);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
-
+    const role = localStorage.getItem("role");
     if (token) {
-      userCtx.loginUserSucces(token, userId);
+      userCtx.loginUserSucces(token, userId, role);
     }
   }, []);
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   userCtx.logout();
+
+  // };
   const authentication = () =>
     localStorage.getItem("token") ? <Redirect to="/app" /> : <PublicRoutes />;
 
   return (
-    // <Container fluid>
-    // 	<Row>
-    // 		<Col>
     <Router history={history}>
       <Switch>
-        <Route path="/app" component={PrivateRoutes} />
+        <Route
+          path="/app"
+          render={({ match }) => (
+            <PrivateRoutes match={match} role={userCtx.state.role} />
+          )}
+        />
         <Route path="/login" render={authentication} />
         <Route path="/" component={Home} />
       </Switch>

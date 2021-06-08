@@ -1,8 +1,10 @@
 import React from "react";
 import HeroWrapper from "../components/HeroWrapper";
 import HomePage from "../pages/Home";
-import RegistrationPage from "../pages/Registration/Registration";
-import ListPage from "../pages/List";
+import FossilRegistrationPage from "../pages/Registration/FossilRegistration";
+import CollectionRegistrationPage from "../pages/Registration/CollectionRegistration";
+import TreasuryRegistrationPage from "../pages/Registration/TreasuryRegistration";
+// import FossilListPage from "../pages/List/FossilList";
 import ProfilePage from "../pages/Profile/Profile";
 import DashboardPage from "../pages/Dashboard";
 import UserPage from "../pages/User";
@@ -12,8 +14,9 @@ const Users = () => <UserPage />;
 const Dashboard = () => <DashboardPage />;
 const Manager = () => <HeroWrapper title="Manager" />;
 const Customers = () => <HeroWrapper title="Customers" />;
-const Registration = () => <RegistrationPage />;
-const List = () => <ListPage />;
+const CollectionRegistration = () => <CollectionRegistrationPage />;
+const FossilRegistration = () => <FossilRegistrationPage />;
+const TreasuryRegistration = () => <TreasuryRegistrationPage />;
 const Profile = () => <ProfilePage />;
 // const Home = () => <HomePage/>;
 
@@ -23,8 +26,9 @@ export {
   Dashboard,
   Manager,
   Customers,
-  Registration,
-  List,
+  CollectionRegistration,
+  FossilRegistration,
+  TreasuryRegistration,
   Profile,
   // Home
 };

@@ -1,0 +1,12 @@
+.Content {
+  /* width: 20px;
+  height: 100%; */
+  background-color: aquamarine;
+  width: 3.25rem;
+  height: 100vh;
+  flex-direction: column-reverse;
+  position: absolute;
+}
+.Head {
+  z-index: 1;
+}
