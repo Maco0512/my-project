@@ -1,204 +1,226 @@
-import React, { useState } from "react";
-import List from "../General/DropDown";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import List from "../General/DropDown/List";
 import axios from "axios";
 export default function Classification(props) {
-  const URL = "http://localhost:8000/api/v1/classification/";
+  const [classy, setClassy] = useState({
+    id: "",
+    value: "",
+  });
+  const [superOrder, setSuperOrder] = useState({
+    id: "",
+    value: "",
+  });
+  const [order, setOrder] = useState({
+    id: "",
+    value: "",
+  });
+  const [subOrder, setSubOrder] = useState({
+    id: "",
+    value: "",
+  });
+  const [family, setFamily] = useState({
+    id: "",
+    value: "",
+  });
+  const [genus, setGenus] = useState({
+    id: "",
+    value: "",
+  });
+  const [species, setSpecies] = useState({
+    id: "",
+    value: "",
+  });
 
-  const initalState = {
-    class: "",
-    superOrder: "",
-    order: "",
-    subOrder: "",
-    family: "",
-    genus: "",
-    species: "",
+  useEffect(() => {
+    // Update the document title using the browser API
+    if (!classy.id) {
+      console.log("id is changing");
+      setSuperOrder({ value: "", id: "" });
+      setOrder({ value: "", id: "" });
+      setSubOrder({ value: "", id: "" });
+      setFamily({ value: "", id: "" });
+      setGenus({ value: "", id: "" });
+      setSpecies({ value: "", id: "" });
+    }
+    if (!superOrder.id) {
+      setOrder({ value: "", id: "" });
+      setSubOrder({ value: "", id: "" });
+      setFamily({ value: "", id: "" });
+      setGenus({ value: "", id: "" });
+      setSpecies({ value: "", id: "" });
+    }
+    if (!order.id) {
+      setSubOrder({ value: "", id: "" });
+      setFamily({ value: "", id: "" });
+      setGenus({ value: "", id: "" });
+      setSpecies({ value: "", id: "" });
+    }
+    if (!subOrder.id) {
+      setFamily({ value: "", id: "" });
+      setGenus({ value: "", id: "" });
+      setSpecies({ value: "", id: "" });
+    }
+    if (!family.id) {
+      setGenus({ value: "", id: "" });
+      setSpecies({ value: "", id: "" });
+    }
+    if (!species.id) setSpecies({ value: "", id: "" });
+  }, [
+    classy.id,
+    superOrder.id,
+    order.id,
+    subOrder.id,
+    family.id,
+    genus.id,
+    species.id,
+  ]);
+
+  const [hasClass, setHasClass] = useState(true);
+  const [hasSuperOrder, setHasSuperOrder] = useState(true);
+  const [hasOrder, setHasOrder] = useState(true);
+  const [hasSubOrder, setHasSubOrder] = useState(true);
+  const [hasFamily, setHasFamily] = useState(true);
+  const [hasGenus, setHasGenus] = useState(true);
+  const [hasSpecies, setHasSpecies] = useState(true);
+
+  const onSubmit = (type) => {
+    console.log("submitting  " + type);
+    switch (type) {
+      case "class":
+        axios.post("http://localhost:8000/api/v1/classification/class", {
+          name: classy.value,
+        });
+        break;
+      case "superorder":
+        axios.post("http://localhost:8000/api/v1/classification/superorder", {
+          name: superOrder.value,
+          class_id: classy.id,
+        });
+        break;
+      case "order":
+        axios.post("http://localhost:8000/api/v1/classification/order", {
+          name: order.value,
+          superorder_id: superOrder.id,
+        });
+        break;
+      case "suborder":
+        axios.post("http://localhost:8000/api/v1/classification/suborder", {
+          name: subOrder.value,
+          order_id: order.id,
+        });
+        break;
+      case "family":
+        axios.post("http://localhost:8000/api/v1/classification/family", {
+          name: family.value,
+          suborder_id: subOrder.id,
+        });
+        break;
+      case "genus":
+        axios.post("http://localhost:8000/api/v1/classification/genus", {
+          name: genus.value,
+          family_id: family.id,
+        });
+        break;
+      case "species":
+        axios.post("http://localhost:8000/api/v1/classification/species", {
+          name: species.value,
+          genus_id: genus.id,
+        });
+        break;
+
+      default:
+        break;
+    }
+    // hasSuperOrder && data.superOrder && console.log("superOrder");
+    // hasOrder && data.order && console.log("order");
+    // hasSubOrder && data.subOrder && console.log("subOrder");
+    // hasFamily && data.family && console.log("family");
+    // hasGenus && data.genus && console.log("genus");
+    // hasSpecies && data.species && console.log("species");
   };
-  const [data, setData] = useState(initalState);
-
-  const [hasSuperOrder, setHasSuperOrder] = useState(false);
-  const [hasOrder, setHasOrder] = useState(false);
-  const [hasSubOrder, setHasSubOrder] = useState(false);
-  const [hasFamily, setHasFamily] = useState(false);
-  const [hasGenus, setHasGenus] = useState(false);
-  const [hasSpecies, setHasSpecies] = useState(false);
-
-  const onSubmit = () => {
-    // data.class &&
-    //   axios
-    //     .post(`${URL}class`, { name: data.class })
-    //     .then((result) => {
-    //       hasSuperOrder &&
-    //         data.superOrder &&
-    //         axios
-    //           .post(`${URL}superorder`, {
-    //             class_id: result.data.id,
-    //             name: data.superOrder,
-    //           })
-    //           .then((result) => {
-    //             hasOrder &&
-    //               data.order &&
-    //               axios
-    //                 .post(`${URL}order`, {
-    //                   superorder_id: result.data.id,
-    //                   name: data.order,
-    //                 })
-    //                 .then((result) => {
-    //                   hasSubOrder &&
-    //                     data.subOrder &&
-    //                     axios
-    //                       .post(`${URL}suborder`, {
-    //                         order_id: result.data.id,
-    //                         name: data.subOrder,
-    //                       })
-    //                       .then((result) => {
-    //                         console.log(result);
-    //                         hasFamily &&
-    //                           data.family &&
-    //                           axios
-    //                             .post(`${URL}family`, {
-    //                               suborder_id: result.data.id,
-    //                               name: data.family,
-    //                             })
-    //                             .then((result) => {
-    //                               hasGenus &&
-    //                                 data.genus &&
-    //                                 axios
-    //                                   .post(`${URL}genus`, {
-    //                                     family_id: result.data.id,
-    //                                     name: data.genus,
-    //                                   })
-    //                                   .then((result) => {
-    //                                     hasSpecies &&
-    //                                       data.species &&
-    //                                       axios.post(`${URL}species`, {
-    //                                         genus_id: result.data.id,
-    //                                         name: data.species,
-    //                                       });
-    //                                   });
-    //                             });
-    //                       });
-    //                 });
-    //           });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-
-    hasSuperOrder && data.superOrder && console.log("superOrder");
-    hasOrder && data.order && console.log("order");
-    hasSubOrder && data.subOrder && console.log("subOrder");
-    hasFamily && data.family && console.log("family");
-    hasGenus && data.genus && console.log("genus");
-    hasSpecies && data.species && console.log("species");
+  const selectClass = (value, id) => {
+    if (value && id) {
+      console.log(value + " id is " + id);
+      setClassy({ value, id });
+      setHasClass(false);
+    }
   };
-  const handleSuperOrder = (e) => {
-    if (e.target.checked) setHasSuperOrder(true);
-    else {
+
+  const selectSuperOrder = (value, id) => {
+    if (value && id) {
+      console.log(value + " id is " + id);
+      setSuperOrder({ value, id });
       setHasSuperOrder(false);
+    }
+  };
+  const selectOrder = (value, id) => {
+    if (value && id) {
+      console.log(value + " id is " + id);
+      setOrder({ value, id });
       setHasOrder(false);
+    }
+  };
+  const selectSubOrder = (value, id) => {
+    if (value && id) {
+      console.log(value + " id suborder is " + id);
+      setSubOrder({ value, id });
       setHasSubOrder(false);
+    }
+  };
+  const selectFamily = (value, id) => {
+    if (value && id) {
+      console.log(value + " family id  is " + id);
+      setFamily({ value, id });
       setHasFamily(false);
+    }
+  };
+  const selectGenus = (value, id) => {
+    if (value && id) {
+      console.log(value + " genus id  is " + id);
+      setGenus({ value, id });
       setHasGenus(false);
-      setHasSpecies(false);
-      //
-      data.superOrder = "";
     }
   };
-  const handleOrder = (e) => {
-    if (e.target.checked) setHasOrder(true);
-    else {
-      setHasOrder(false);
-      setHasSubOrder(false);
-      setHasFamily(false);
-      setHasGenus(false);
+  const selectSpecies = (value, id) => {
+    if (value && id) {
+      console.log(value + " species id  is " + id);
+      setSpecies({ value, id });
       setHasSpecies(false);
-      //
-      data.order = "";
     }
   };
-  const handleSubOrder = (e) => {
-    if (e.target.checked) setHasSubOrder(true);
-    else {
-      setHasSubOrder(false);
-      setHasFamily(false);
-      setHasGenus(false);
-      setHasSpecies(false);
-      //
-      data.subOrder = "";
-    }
-  };
-  const handleFamily = (e) => {
-    if (e.target.checked) setHasFamily(true);
-    else {
-      setHasFamily(false);
-      setHasGenus(false);
-      setHasSpecies(false);
-      //
-      data.family = "";
-    }
-  };
-  const handleGenus = (e) => {
-    if (e.target.checked) setHasGenus(true);
-    else {
-      setHasGenus(false);
-      setHasSpecies(false);
-      //
-      data.genus = "";
-    }
-  };
-  const handleSpecies = (e) => {
-    if (e.target.checked) setHasSpecies(true);
-    else {
-      setHasSpecies(false);
-      //
-      data.species = "";
-    }
-  };
+  // // ------------------------------------------type changing event
   const changeClass = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      class: e,
-    }));
+    setHasClass(true);
+    setClassy({ value: e, id: "" });
   };
   const changeSuperOrder = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      superOrder: e,
-    }));
+    setHasSuperOrder(true);
+    setSuperOrder({ value: e, id: "" });
   };
 
   const changeOrder = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      order: e,
-    }));
+    setHasOrder(true);
+    setOrder({ value: e, id: "" });
   };
 
   const changeSubOrder = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      subOrder: e,
-    }));
+    setHasSubOrder(true);
+    setSubOrder({ value: e, id: "" });
   };
   const changeFamily = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      family: e,
-    }));
+    setHasFamily(true);
+    setFamily({ value: e, id: "" });
   };
 
   const changeGenus = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      genus: e,
-    }));
+    setHasGenus(true);
+    setGenus({ value: e, id: "" });
   };
 
   const changeSpecies = (e) => {
-    setData((formBefore) => ({
-      ...formBefore,
-      species: e,
-    }));
+    setHasSpecies(true);
+    setSpecies({ value: e, id: "" });
   };
 
   return (
@@ -218,20 +240,23 @@ export default function Classification(props) {
                 type="text"
                 className="input is-transparent"
                 onChange={(e) => changeClass(e.target.value)}
-                value={data.class}
+                value={classy.value}
               />
               <hr className="dropdown-divider" />
-              <List uy={data.class} select={changeClass} />
+              {hasClass && (
+                <List
+                  searchedVal={classy.value}
+                  select={selectClass}
+                  name="class"
+                  onSubmit={onSubmit}
+                />
+              )}
             </div>
           </div>
         </div>
-        <label className="checkbox column">
-          <input type="checkbox" onClick={handleSuperOrder} />
-          Дээд баг бүртгүүлэх
-        </label>
       </div>
 
-      {/* {hasSuperOrder && (
+      {classy.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column">Дээд баг</label>
           <div className="control column">
@@ -243,24 +268,29 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
+                  autoComplete="off"
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeSuperOrder(e.target.value)}
-                  value={data.superOrder}
+                  value={superOrder.value}
                 />
                 <hr className="dropdown-divider" />
-                <List uy={data.superOrder} select={changeSuperOrder} />
+                {hasSuperOrder && (
+                  <List
+                    searchedVal={superOrder.value}
+                    select={selectSuperOrder}
+                    name="superorder"
+                    onSubmit={onSubmit}
+                    id={classy.id}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <label className="checkbox column">
-            <input type="checkbox" onClick={handleOrder} />
-            Баг бүртүүлэх
-          </label>
         </div>
       )}
 
-      {hasOrder && (
+      {superOrder.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column">Баг</label>
           <div className="control column">
@@ -272,23 +302,28 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
-                  value={data.order}
+                  value={order.value}
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeOrder(e.target.value)}
                 />
                 <hr className="dropdown-divider" />
-                <List uy={data.order} select={changeOrder} />
+                {hasOrder && (
+                  <List
+                    searchedVal={order.value}
+                    select={selectOrder}
+                    name="order"
+                    onSubmit={onSubmit}
+                    id={superOrder.id}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <label className="checkbox column">
-            <input type="checkbox" onClick={handleSubOrder} />
-            Дэд баг бүртүүлэх
-          </label>
         </div>
       )}
-      {hasSubOrder && (
+
+      {order.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column ">Дэд баг</label>
           <div className="control column">
@@ -300,23 +335,28 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
-                  value={data.subOrder}
+                  value={subOrder.value}
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeSubOrder(e.target.value)}
                 />
                 <hr className="dropdown-divider" />
-                <List uy={data.subOrder} select={changeSubOrder} />
+                {hasSubOrder && (
+                  <List
+                    searchedVal={subOrder.value}
+                    select={selectSubOrder}
+                    name="suborder"
+                    onSubmit={onSubmit}
+                    id={order.id}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <label className="checkbox column">
-            <input type="checkbox" onClick={handleFamily} />
-            Зүйлийн нэр бүртүүлэх
-          </label>
         </div>
       )}
-      {hasFamily && (
+
+      {subOrder.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column">Овог</label>
           <div className="control column">
@@ -328,23 +368,29 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
-                  value={data.family}
+                  value={family.value}
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeFamily(e.target.value)}
                 />
                 <hr className="dropdown-divider" />
-                <List uy={data.family} select={changeFamily} />
+                <hr className="dropdown-divider" />
+                {hasFamily && (
+                  <List
+                    searchedVal={family.value}
+                    select={selectFamily}
+                    name="family"
+                    onSubmit={onSubmit}
+                    id={subOrder.id}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <label className="checkbox column">
-            <input type="checkbox" onClick={handleGenus} />
-            Төрөл бүртгүүлэх
-          </label>
         </div>
       )}
-      {hasGenus && (
+
+      {family.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column">Төрөл</label>
           <div className="control column">
@@ -356,23 +402,28 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
-                  value={data.genus}
+                  value={genus.value}
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeGenus(e.target.value)}
                 />
                 <hr className="dropdown-divider" />
-                <List uy={data.genus} select={changeGenus} />
+                {hasGenus && (
+                  <List
+                    searchedVal={genus.value}
+                    select={selectGenus}
+                    name="genus"
+                    onSubmit={onSubmit}
+                    id={family.id}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <label className="checkbox column">
-            <input type="checkbox" onClick={handleSpecies} />
-            Зүйл бүртгүүлэх
-          </label>
         </div>
       )}
-      {hasSpecies && (
+
+      {genus.id && (
         <div className="field is-horizontal columns" style={{ width: "500px" }}>
           <label className="label column">Зүйлийн нэр </label>
           <div className="control column">
@@ -384,25 +435,26 @@ export default function Classification(props) {
                 style={{ position: " relative" }}
               >
                 <input
-                  value={data.species}
+                  value={species.value}
                   type="text"
                   className="input is-transparent"
                   onChange={(e) => changeSpecies(e.target.value)}
                 />
-                <hr class="dropdown-divider" />
-                <List uy={data.species} select={changeSpecies} />
+                <hr className="dropdown-divider" />
+                {hasSpecies && (
+                  <List
+                    searchedVal={species.value}
+                    select={selectSpecies}
+                    name="species"
+                    onSubmit={onSubmit}
+                    id={genus.id}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
-      )} */}
-      {/* <div className="field is-grouped columns">
-        <div className="control">
-          <button className="button is-link" onClick={onSubmit}>
-            Submit
-          </button>
-        </div>
-      </div> */}
+      )}
     </div>
   );
 }

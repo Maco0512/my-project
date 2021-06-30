@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SelectInput from "../../../../components/General/SelectInput";
 
-export const Form = ({ register, type, useDefault }) => {
+export const Form = ({ register, type, id }) => {
   const options = [
     { value: "dinasour", label: "Үлэг гүрвэл" },
     { value: "bird", label: "Шувуу" },
@@ -19,12 +19,26 @@ export const Form = ({ register, type, useDefault }) => {
         <div className="field">
           <label className="label">Цуглуулгын дугаар</label>
           <div className="control">
-            <input
+            {/* <div className="select">
+              <select {...register("catalog_no")}>
+                {options.map((option, index) => (
+                  <option key={index} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div> */}
+            <SelectInput
+              register={register}
+              registername="catalog_no"
+              id={id}
+            />
+            {/* <input
               {...register("catalog_no")}
               className="input is-small"
               type="text"
               placeholder="catalog_no"
-            />
+            /> */}
           </div>
         </div>
         <div className="field" style={{ marginBottom: "38px" }}>
@@ -42,7 +56,6 @@ export const Form = ({ register, type, useDefault }) => {
           <div className="field column">
             <label className="label">Дээд баг</label>
             <div className="control">
-              {/* <SelectInput register={register} registername="branch_name" /> */}
               <div className="select">
                 <select {...register("branch_name")}>
                   {options.map((option, index) => (
@@ -59,6 +72,15 @@ export const Form = ({ register, type, useDefault }) => {
             <label className="label">Зүйл</label>
             <div className="control">
               <SelectInput register={register} registername="species" />
+              {/* <div className="select">
+              <select {...register("catalog_no")}>
+                {options.map((option, index) => (
+                  <option key={index} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div> */}
             </div>
           </div>
         </div>

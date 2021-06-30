@@ -42,6 +42,20 @@ const components = {
     icon: "menu",
     module: 1,
   },
+  // request: {
+  //   component: "Request",
+  //   url: "/request",
+  //   title: "Бүртгэл хүсэлт",
+  //   icon: "menu",
+  //   module: 1,
+  // },
+  requestList: {
+    component: "RequestList",
+    url: "/request-list",
+    title: "Ирсэн хүсэлт",
+    icon: "menu",
+    module: 1,
+  },
 };
 
 // modules for grouping.
@@ -74,7 +88,7 @@ const rolesConfig = {
     routes: [
       {
         component: "Dashboard",
-        url: "/",
+        url: "",
         title: "Самбар",
         icon: "menu",
         module: 1,

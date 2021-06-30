@@ -8,14 +8,3 @@ export const branchOptions = [
   { value: "insect", label: "Шавж", color: "#36B37E" },
   { value: "egg_1", label: "Өндөг", color: "#00875A" },
 ];
-
-{
-  /* <option value="Dinasour">Үлэг гүрвэл</option>
-<option value="Bird">Шувуу</option>
-<option value="Mammalia">Хөхтөн</option>
-<option value="Turtle">Яст мэлхий</option>
-<option value="Fish">Загас</option>
-<option value="Plant">Ургамал</option>
-              <option value="Insect">Шавж</option>
-              <option value="Egg_1">Өндөг</option> */
-}

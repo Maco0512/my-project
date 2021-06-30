@@ -32,7 +32,7 @@ export default function Signup(props) {
             onChange={changePassword1}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-lock" />
+            <i class="fas fa-lock"></i>
           </span>
         </div>
       </div>
@@ -47,7 +47,7 @@ export default function Signup(props) {
             onChange={changePassword2}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-lock" />
+            <i class="fas fa-lock"></i>
           </span>
         </div>
       </div>

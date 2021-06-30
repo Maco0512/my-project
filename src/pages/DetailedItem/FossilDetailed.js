@@ -1,26 +1,11 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useParams, Link } from "react-router-dom";
-import { getItem, updateItem } from "../../api/fossilAPI";
 import apiAttribute from "../../api";
 import axios from "axios";
-import ImageViewer from "react-simple-image-viewer";
 
 import UserContext from "../../context/UserContext";
-function DetailedItem() {
-  const [currentImage, setCurrentImage] = useState(0);
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
-
-  const openImageViewer = useCallback((index) => {
-    setCurrentImage(index);
-    setIsViewerOpen(true);
-  }, []);
-
-  const closeImageViewer = () => {
-    setCurrentImage(0);
-    setIsViewerOpen(false);
-  };
-
+function FossilDetailed() {
   const ctx = useContext(UserContext);
 
   const { register, handleSubmit } = useForm({
@@ -28,11 +13,12 @@ function DetailedItem() {
   });
 
   const param = useParams();
-  const columnsData = apiAttribute(param.type);
+  const columnsData = apiAttribute("fossil");
 
   const [inEditMode, setInEditMode] = useState({
     status: false,
   });
+  const [updated, setUpdated] = useState(false);
   const [list, setList] = useState([]);
   const [showEdit, setShowEdit] = useState(true);
   const checkUserEdit = (e) => {
@@ -52,13 +38,12 @@ function DetailedItem() {
   useEffect(() => {
     const fetchItems = async () => {
       await axios
-        .get(`http://localhost:8000/api/v1/${param.type}/${param.id}`)
+        .get(`http://localhost:8000/api/v1/fossil/${param.id}`)
         .then((e) => {
           let data = e.data.data;
-          if (param.type === "fossil") {
-            let meridian = { ...e.data.data.meridian };
-            data = { ...meridian, ...data };
-          }
+          let meridian = { ...e.data.data.meridian };
+          data = { ...meridian, ...data };
+          console.log(data);
           setList(data);
         });
       // setList(list.data)
@@ -68,7 +53,7 @@ function DetailedItem() {
     return () => {
       setList(null);
     };
-  }, []);
+  }, [updated]);
 
   const onEdit = (event) => {
     event.preventDefault();
@@ -85,12 +70,11 @@ function DetailedItem() {
   const submitHandler = handleSubmit(async (data) => {
     console.log(data);
     await axios
-      .put(`http://localhost:8000/api/v1/${param.type}/${param.id}`, data)
+      .put(`http://localhost:8000/api/v1/fossil/${param.id}`, data)
       .then((e) => {
-        console.log("Амжилттай хадгалав");
         setList(e.data.data);
+        setUpdated(true);
       });
-
     setInEditMode({
       status: false,
     });
@@ -145,7 +129,7 @@ function DetailedItem() {
                       <button
                         type="submit"
                         className={"button card-footer-item"}
-                        onClick={submitHandler}
+                        // onClick={() => onSave({})}
                       >
                         Save
                       </button>
@@ -161,6 +145,7 @@ function DetailedItem() {
                   ) : (
                     showEdit && (
                       <button
+                        type="button"
                         className="button card-footer-item"
                         onClick={onEdit}
                       >
@@ -176,15 +161,12 @@ function DetailedItem() {
             <div className="column">
               <div className="card">
                 <div className="card-image">
-                  {list.image.map((e, i) => (
-                    <img
-                      className=""
-                      src={`http://localhost:8000/uploads/images/photo_${e}`}
-                      alt="..."
-                      width="300"
-                      onClick={() => openImageViewer(i)}
-                    />
-                  ))}
+                  <img
+                    className=""
+                    src={`http://localhost:8000/public/upload/${list.image}`}
+                    alt="..."
+                    width="300"
+                  />
                 </div>
 
                 <div className="card-body">
@@ -198,21 +180,8 @@ function DetailedItem() {
           )}
         </div>
       </div>
-
-      {isViewerOpen && (
-        <ImageViewer
-          src={list.image.map(
-            (e) => `http://localhost:8000/uploads/images/photo_${e}`
-          )}
-          currentIndex={currentImage}
-          onClose={closeImageViewer}
-          backgroundStyle={{
-            backgroundColor: "rgba(0,0,0,0.9)",
-          }}
-        />
-      )}
     </section>
   );
 }
 
-export default DetailedItem;
+export default FossilDetailed;

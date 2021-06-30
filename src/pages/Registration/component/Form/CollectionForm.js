@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import SelectInput from "../../../../components/General/SelectInput";
 
+import ImageUploader from "../../../../components/General/FormElements/ImageUploader";
 export const Form = ({ register }) => {
   return (
     <div className="columns">
@@ -13,10 +13,28 @@ export const Form = ({ register }) => {
         >
           <label className="label">Цуглуулгын дугаар</label>
           <div className="control">
-            <SelectInput register={register} registername="catalog_no" />
+            <input
+              autoComplete="off"
+              {...register("catalog_no")}
+              className="input is-small"
+              type="text"
+              placeholder="catalog_no"
+            />
+            {/* <SelectInput register={register} registername="catalog_no" danger /> */}
           </div>
         </div>
-
+        <div className="field">
+          <label className="label">Хээрийн дугаар</label>
+          <div className="control">
+            <input
+              {...register("field_no")}
+              className="input is-small is-danger"
+              type="text"
+              placeholder="Хээрийн дугаар"
+            />
+          </div>
+          <p className="help is-danger">Заавал бөглөх шаардлагатай</p>
+        </div>
         <div className="field">
           <label className="label">Цуглуулсан</label>
           <div className="control">
@@ -25,17 +43,6 @@ export const Form = ({ register }) => {
               className="input is-small"
               type="text"
               placeholder="Цуглуулсан"
-            />
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Хээрийн дугаар</label>
-          <div className="control">
-            <input
-              {...register("field_no")}
-              className="input is-small"
-              type="text"
-              placeholder="Хээрийн дугаар"
             />
           </div>
         </div>
@@ -176,6 +183,9 @@ export const Form = ({ register }) => {
               placeholder="Лавлах өгөгдлийн сан"
             />
           </div>
+        </div>
+        <div className="field">
+          <ImageUploader center id="image" register={register} />
         </div>
       </div>
     </div>

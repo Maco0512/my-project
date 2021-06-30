@@ -131,6 +131,7 @@ export default function List(props) {
                             }
                           ></i>
                         )}
+                        <button>Олдвор баяжуулах</button>
                       </div>
                     </td>
                   </tr>

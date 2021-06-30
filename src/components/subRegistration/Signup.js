@@ -122,7 +122,7 @@ export default function Signup(props) {
             onChange={changeEmail}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-user" />
+            <i className="fas fa-user"></i>
           </span>
         </div>
       </div>
@@ -137,7 +137,7 @@ export default function Signup(props) {
             onChange={changeName}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-user" />
+            <i className="fas fa-user"></i>
           </span>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function Signup(props) {
             onChange={changePassword}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-lock" />
+            <i className="fas fa-lock"></i>
           </span>
         </div>
 
@@ -175,7 +175,7 @@ export default function Signup(props) {
             onChange={changePassword1}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-lock" />
+            <i className="fas fa-lock"></i>
           </span>
         </div>
       </div>

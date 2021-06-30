@@ -92,7 +92,11 @@ function Navigation(props) {
       <div className="navbar-end">
         <div className="navbar-item">
           <span className="icon is-large" onClick={toggleIsOn}>
-            <i className="fas fa-bell"></i>
+            <i className="fas fa-bell">
+              <span title="Badge top right" className="badge">
+                8
+              </span>
+            </i>
           </span>
           {isOn && <Notification show={isOn} />}
           {/* {isOn && (

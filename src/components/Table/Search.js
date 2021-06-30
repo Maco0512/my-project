@@ -33,7 +33,7 @@ export default function Search(props) {
           onChange={(e) => onInputChange(e.target.value)}
         />
         <span className="icon is-small is-right">
-          <i class="fas fa-search"></i>
+          <i className="fas fa-search"></i>
         </span>
       </p>
     </div>

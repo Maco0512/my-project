@@ -3,14 +3,15 @@ import React, { useState, useMemo, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Search from "../../components/Table/Search";
 import Pagination from "../../components/Table/Pagination";
-
-// import { getItems, deleteItem } from "../../api/fossilAPI";
-// import { getUserBranch } from "../../api/userAPI";
+import Modal from "../../components/General/Modal";
+// import Signup from "../../components/subRegistration/Signup";
 
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 // import DialogAction from '../DialogAction'
-export default function List(props) {
+
+import styles from "./style.module.css";
+export default function RequestList(props) {
   const ctx = useContext(UserContext);
 
   // const [hasItem, setHasItem] = useState(false);
@@ -18,22 +19,11 @@ export default function List(props) {
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [search, setSearch] = useState("");
   // const [sorting, setSorting] = useState({ field: "", order: "" });
 
-  const ITEM_PER_PAGE = 3;
-
-  const [showDelete, setShowDelete] = useState(false);
-  const checkUser = () => {
-    ctx.state.role === "researcher" && setShowDelete(true);
-    ctx.state.role === "admin" && setShowDelete(true);
-    ctx.state.role === "expert" && setShowDelete(true);
-  };
+  const ITEM_PER_PAGE = 10;
 
   useEffect(() => {
-    // getUserBranch(localStorage.getItem("userId")).then((e) =>
-    //   console.log(e.data)
-    // );
     const fetchItems = async () => {
       var params = new URLSearchParams();
 
@@ -42,25 +32,25 @@ export default function List(props) {
           params.append("branch_name", e);
         });
 
-      const data = await axios
+      await axios
         .get("http://localhost:8000/api/v1/fossil", {
           params: params,
         })
         .then((e) => setItems(e.data.data));
-
-      // await getItems(params).then((result) => {
-      //   setItems(result.data);
-      // });
-      // setHasItem(true);
-      // setItems(list.data);
-      // setHasItem(true);
     };
 
     fetchItems();
-    checkUser();
   }, []);
 
-  const onDelete = ({ id }) => {
+  const onApprove = (data) => {
+    console.log("Approving");
+    data.requestID = data._id;
+    delete data._id;
+    console.log(data);
+  };
+  const onReject = (data) => {
+    console.log("Rejecting");
+    console.log(data);
     // const result = confirmAlert({
     //   title: "Та устгах гэж байна",
     //   message: "Үүнийг хийнэ гэдэгтээ итгэлтэй байнуу",
@@ -79,30 +69,63 @@ export default function List(props) {
     //   await axios.delete("http://localhost:8000/api/v1/fossil", { id: id });
   };
 
-  // const responseHandler=(res)=> {
-  //   // res.row.forEach((i,row)=>row.state=selections.includes(rowid)!==-1
-  //   // return res
-  // }
-  const itemsData = useMemo(() => {
-    let computedItems = items;
-    setTotalItems(computedItems.length);
-    if (search) {
-      console.log(computedItems);
-      computedItems = computedItems.filter(
-        (item) =>
-          item.catalog_no.toLowerCase().includes(search.toLowerCase()) ||
-          item.locality.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  const [showList, setShowList] = useState(false);
 
-    return computedItems.slice(
-      (currentPage - 1) * ITEM_PER_PAGE,
-      (currentPage - 1) * ITEM_PER_PAGE + ITEM_PER_PAGE
-    );
-  }, [items, currentPage, search]);
+  const closeConfirmModal = () => {
+    setShowList(false);
+  };
+  const showConfirmModal = () => {
+    setShowList(true);
+  };
+  const [detailedList, setDetailedList] = useState([]);
+
+  const onMore = (data) => {
+    showConfirmModal();
+    let meridian = { ...data.meridian };
+    delete data.meridian;
+    delete data._id;
+    delete data.__v;
+    delete data.user_id;
+    let temp = { ...meridian, ...data };
+    console.log("temp==>");
+    console.log(temp);
+    setDetailedList(temp);
+  };
 
   return (
     <div className="content">
+      <Modal closeConfirmModal={closeConfirmModal} show={showList}>
+        {/* <Signup /> */}
+        <div className={`card-content ${styles.Overflow}`}>
+          {// Object.keys(columnsData).map((key, i) => (
+          //             <div key={key + i} className="columns">
+          //               <div className="is-one-fifth column">
+          //                 <label className="label">{columnsData[key]}:</label>
+          //               </div>
+          //               <div className="column">
+          //                   <label>{items[key]}</label>
+          //               </div>
+          //             </div>
+          //           ))
+          Object.keys(detailedList).map((key, i) => (
+            <p key={i}>
+              {detailedList[key] &&
+                (key === "image" ? (
+                  <img
+                    className=""
+                    src={`http://localhost:8000/public/upload/${detailedList[key]}`}
+                    alt="..."
+                    width="300"
+                  />
+                ) : (
+                  <span>
+                    {key}:{detailedList[key]}
+                  </span>
+                ))}
+            </p>
+          ))}
+        </div>
+      </Modal>
       <div className="container">
         {/* <h4 className="card-title">Item list</h4>
           <p className="card-category">Category </p> */}
@@ -115,12 +138,6 @@ export default function List(props) {
             </div> */}
 
           <div className="card-content">
-            <Search
-              onSearch={(value) => {
-                setSearch(value);
-                setCurrentPage(1);
-              }}
-            />
             <table className="table ">
               <thead>
                 <tr>
@@ -132,7 +149,7 @@ export default function List(props) {
                 </tr>
               </thead>
               <tbody>
-                {itemsData.map((item) => (
+                {items.map((item) => (
                   <tr key={item._id}>
                     <td>
                       <label>{item.catalog_no}</label>
@@ -148,20 +165,27 @@ export default function List(props) {
                     </td>
 
                     <td>
-                      <div>
-                        <Link to={`detailed-item/${item._id}/fossil`}>
-                          <i className="fas fa-info-circle"></i>
-                        </Link>
-                        {showDelete && (
+                      <div className="tags has-addons">
+                        <span
+                          className="tag is-primary"
+                          onClick={() => onApprove(item)}
+                        >
+                          Зөвшөөрөх
+                        </span>
+                        <span
+                          className="tag is-danger"
+                          onClick={() => onReject(item)}
+                        >
+                          Буцаах
+                        </span>
+                        <span className="tag">
+                          {/* <Link to={`detailed-item/${item._id}/fossil`}> */}
                           <i
-                            className="fas fa-trash"
-                            onClick={() =>
-                              onDelete({
-                                id: item._id,
-                              })
-                            }
-                          ></i>
-                        )}
+                            className="fas fa-info-circle"
+                            onClick={() => onMore(item)}
+                          />
+                          {/* </Link> */}
+                        </span>
                       </div>
                     </td>
                   </tr>

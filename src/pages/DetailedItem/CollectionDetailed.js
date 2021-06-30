@@ -7,7 +7,7 @@ import axios from "axios";
 import ImageViewer from "react-simple-image-viewer";
 
 import UserContext from "../../context/UserContext";
-function DetailedItem() {
+function CollectionDetailed() {
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
@@ -28,7 +28,7 @@ function DetailedItem() {
   });
 
   const param = useParams();
-  const columnsData = apiAttribute(param.type);
+  const columnsData = apiAttribute("collection");
 
   const [inEditMode, setInEditMode] = useState({
     status: false,
@@ -52,14 +52,9 @@ function DetailedItem() {
   useEffect(() => {
     const fetchItems = async () => {
       await axios
-        .get(`http://localhost:8000/api/v1/${param.type}/${param.id}`)
+        .get(`http://localhost:8000/api/v1/collection/${param.id}`)
         .then((e) => {
-          let data = e.data.data;
-          if (param.type === "fossil") {
-            let meridian = { ...e.data.data.meridian };
-            data = { ...meridian, ...data };
-          }
-          setList(data);
+          setList(e.data.data);
         });
       // setList(list.data)
     };
@@ -160,12 +155,25 @@ function DetailedItem() {
                     </React.Fragment>
                   ) : (
                     showEdit && (
-                      <button
-                        className="button card-footer-item"
-                        onClick={onEdit}
-                      >
-                        Edit
-                      </button>
+                      <React.Fragment>
+                        {/* <button className="button card-footer-item "> */}
+                        <Link to={`/app/fossil-registration/` + param.id}>
+                          Олдвор үүсгэх
+                        </Link>
+                        {/* </button> */}
+                        <button
+                          className="button card-footer-item is-primary"
+                          onClick={onEdit}
+                        >
+                          Өөрчлөлт оруулах
+                        </button>
+                        <button
+                          className="button card-footer-item is-danger"
+                          onClick={onEdit}
+                        >
+                          Устгах
+                        </button>
+                      </React.Fragment>
                     )
                   )}
                 </div>
@@ -215,4 +223,4 @@ function DetailedItem() {
   );
 }
 
-export default DetailedItem;
+export default CollectionDetailed;

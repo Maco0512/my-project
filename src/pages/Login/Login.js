@@ -63,7 +63,7 @@ const Login = (props) => {
             onChange={changeEmail}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-user" />
+            <i className="fas fa-user"></i>
           </span>
         </div>
       </div>
@@ -77,7 +77,7 @@ const Login = (props) => {
             onChange={changePassword}
           />
           <span className="icon is-small is-left">
-            <i className="fa fa-lock" />
+            <i class="fas fa-lock"></i>
           </span>
         </div>
         <br />

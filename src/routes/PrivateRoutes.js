@@ -6,7 +6,11 @@ import * as Routes from "./index";
 import Navigation from "../components/Navigation";
 import NotFound from "../components/NotFound";
 
+import FossilDetailed from "../pages/DetailedItem/FossilDetailed";
+import CollectionDetailed from "../pages/DetailedItem/CollectionDetailed";
 import DetailedItem from "../pages/DetailedItem";
+// import DetailedItem from "../pages/DetailedItem";
+
 import Registration from "../pages/Registration/FossilRegistration";
 import Classification from "../components/subRegistration/Classification";
 
@@ -66,6 +70,21 @@ function PrivateRoutes(props) {
             path={`${props.match.path}${route.url}`}
           />
         ))}
+        <Route
+          exact
+          path={`${props.match.path}/fossil-registration/:id`}
+          component={Registration}
+        />
+        <Route
+          exact
+          path={`${props.match.path}/detailed-item/:id/fossil`}
+          component={FossilDetailed}
+        />
+        <Route
+          exact
+          path={`${props.match.path}/detailed-item/:id/collection`}
+          component={CollectionDetailed}
+        />
         <Route
           exact
           path={`${props.match.path}/detailed-item/:id/:type`}

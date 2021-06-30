@@ -14,7 +14,7 @@ const Home = () => {
           >
             {/* <div className="container"> */}
             <div className="navbar-brand" style={{ marginTop: "10px" }}>
-              <a href="#" className="navbar-item">
+              <a href="./" className="navbar-item">
                 <img
                   src={require("../../assets/pageImg/logo.png")}
                   alt="Logo"

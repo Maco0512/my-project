@@ -235,7 +235,7 @@ const Dashboard = () => {
                         <footer className="card-footer">
                           <Link
                             className="card-footer-item"
-                            to={`detailed-item/${e._id}/fossil`}
+                            to={`app/detailed-item/${e._id}/fossil`}
                           >
                             Дэлгэрэнгүй
                           </Link>
@@ -273,7 +273,7 @@ const Dashboard = () => {
                         <footer className="card-footer">
                           <Link
                             className="card-footer-item"
-                            to={`detailed-item/${e._id}/treasury`}
+                            to={`app/detailed-item/${e._id}/treasury`}
                           >
                             Дэлгэрэнгүй
                           </Link>
@@ -317,7 +317,7 @@ const Dashboard = () => {
                         <footer className="card-footer">
                           <Link
                             className="card-footer-item"
-                            to={`detailed-item/${e._id}/collection`}
+                            to={`app/detailed-item/${e._id}/collection`}
                           >
                             Дэлгэрэнгүй
                           </Link>

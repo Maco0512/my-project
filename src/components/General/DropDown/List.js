@@ -1,48 +1,67 @@
 import React, { useState, useEffect } from "react";
-import cs142models from "./state";
 import axios from "axios";
 
 const List = (props) => {
   const [list, setList] = useState([]);
-
-  useEffect(() => {
-    setList(cs142models());
-  }, []);
-
-  let values = list.filter((items) => {
-    return items.toLowerCase().includes(props.searchedVal.toLowerCase());
-  });
-
-  let name = props.name;
-
-  // const createList = () => {
-  //   console.log("props is changing..and value is ");
-  //   values = list.filter((items) => {
-  //     return items.toLowerCase().includes(props.searchedVal);
-  //   });
-  // };
-
-  const handleSelect = (e) => {
-    props.select(e.target.value, props.name);
+  const getData = (obj = "") => {
+    axios
+      .get(`http://localhost:8000/api/v1/classification/${props.name}`, obj)
+      .then((e) => setList(e.data.data))
+      .catch((err) => console.log(err));
   };
 
-  if (values.length && props.searchedVal)
+  useEffect(() => {
+    switch (props.name) {
+      case "class":
+        getData();
+        break;
+      case "superorder":
+        getData({ params: { class_id: props.id } });
+        break;
+      case "order":
+        getData({ params: { superorder_id: props.id } });
+        break;
+      case "suborder":
+        getData({ params: { order_id: props.id } });
+        break;
+      case "family":
+        getData({ params: { suborder_id: props.id } });
+        break;
+      case "genus":
+        getData({ params: { family_id: props.id } });
+        break;
+      case "species":
+        getData({ params: { genus_id: props.id } });
+        break;
+      default:
+        break;
+    }
+  }, []);
+
+  let filtered = list.filter((items) =>
+    items.name.toLowerCase().includes(props.searchedVal.toLowerCase())
+  );
+  let name = props.name;
+
+  const handleSelect = (e) => {
+    const value = e.target.label;
+    const id = e.target.value;
+    props.select(value, id);
+  };
+
+  if (filtered.length && props.searchedVal)
     return (
-      <div className="select">
-        {/* <h3>{tool}</h3> */}
-        <select
-          // className="multiple"
-          size={values.length}
-          onClick={handleSelect}
-        >
-          {values.map((result, i) => (
-            <option value={result} key={result + i}>
-              {result}
+      <div className="select is-multiple">
+        <select size={filtered.length + 1} onClick={handleSelect}>
+          {filtered.map((result, i) => (
+            <option value={result._id} key={result._id}>
+              {result.name}
             </option>
           ))}
         </select>
       </div>
     );
+  else if (props.onSubmit === undefined) return null;
   else
     return (
       <button
@@ -53,18 +72,5 @@ const List = (props) => {
         Шинээр бүртгүүлэх
       </button>
     );
-  // const words = cs142models();
-  // tool = 0;
-  // let results = words.filter((word) => {
-  //   let wor = word.toLowerCase();
-  //   for (let i = 0; i < wor.length; i++)
-  //     if (props.uy.length !== 0) {
-  //       console.log("ok");
-  //       if (wor.slice(i, props.uy.length + i) === props.uy) {
-  //         tool++;
-  //         return 1; //let = /props.uy*/;
-  //       }
-  //     } else return 0;
-  // }); //Arizona => arizona > zo
 };
 export default List;

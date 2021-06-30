@@ -1,36 +1,38 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Form } from "./component/Form/FossilForm";
 
-import { createItem, uploadPhoto } from "../../api/fossilAPI";
-import axios from "axios";
+// import { createItem, uploadPhoto } from "../../api/fossilAPI";
+// import axios from "axios";
 
 const Registration = () => {
   let history = useHistory();
+  const param = useParams();
+
   const [value, setValue] = useState("fossil");
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState(null);
 
   const { register, handleSubmit } = useForm();
 
-  const handleClick = handleSubmit(async (data) => {
+  const handleClick = handleSubmit((data) => {
     console.log(data);
-    data.user_id = localStorage.getItem("userId");
-    const formData = new FormData();
-    selectedFile && formData.append("file", selectedFile);
-    axios
-      .post("http://localhost:8000/api/v1/fossil", data)
-      .then((result) => {
-        // console.log(result.data.id);
-        selectedFile && uploadPhoto(result.data.id, formData);
-        history.push("/app/fossil-list");
-        setSelectedFile(null);
-      })
-      .catch((error) => {
-        console.log(error);
-        setError("Талбарын утгыг бүрэн оруул");
-      });
+    // data.user_id = localStorage.getItem("userId");
+    // const formData = new FormData();
+    // selectedFile && formData.append("file", selectedFile);
+    // axios
+    //   .post("http://localhost:8000/api/v1/fossil", data)
+    //   .then((result) => {
+    //     // console.log(result.data.id);
+    //     selectedFile && uploadPhoto(result.data.id, formData);
+    //     history.push("/app/fossil-list");
+    //     setSelectedFile(null);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     setError("Талбарын утгыг бүрэн оруул");
+    //   });
   });
 
   // useEffect(() => {
@@ -66,7 +68,7 @@ const Registration = () => {
         <div className="container">
           <br />
           <form onSubmit={handleClick}>
-            <Form register={register} />
+            <Form register={register} id={param.id} />
             <div className="field is-grouped">
               <div className="control">
                 <div className="file is-info is-centered is-small">

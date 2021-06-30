@@ -12,7 +12,8 @@
     "react-hook-form": "^7.2.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-select": "^4.3.1"
+    "react-select": "^4.3.1",
+    "react-simple-image-viewer": "0.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

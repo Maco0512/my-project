@@ -5,6 +5,7 @@ import { Form } from "./component/Form/CollectionForm";
 
 import { createItem, uploadPhoto } from "../../api/fossilAPI";
 import axios from "axios";
+import { format } from "prettier";
 
 export default function CollectionRegistration() {
   let history = useHistory();
@@ -14,16 +15,45 @@ export default function CollectionRegistration() {
   const { register, handleSubmit } = useForm();
 
   const handleClick = handleSubmit((data) => {
+    //  const formData=new FormData();
+    //  formData.append('image')
+    console.log(data);
     data.user_id = localStorage.getItem("userId");
+    // data.image[0].name = "photo_" + data.catalog_no;
     const formData = new FormData();
-    selectedFile && formData.append("file", selectedFile);
+
+    for (var key in data) {
+      if (key === "images") {
+        // let images = [];
+        // for (let i = 0; i < data.images.length; i++) {
+        //   images.push(data.images[i]);
+        // }
+        // console.log(images);
+        // formData.append("images", images);
+        for (const key of Object.keys(data.images)) {
+          formData.append("images", data.images[key]);
+        }
+      } else formData.append(key, data[key]);
+    }
 
     axios
-      .post("http://localhost:8000/api/v1/collection", data)
+      .post(
+        "http://localhost:8000/api/v1/collection",
+
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+
+        // (headers: { "Content-Type": "multipart/form-data" })
+      )
       .then((result) => {
-        selectedFile && uploadPhoto(result.id, formData);
-        history.push("/app/collection-list");
-        setSelectedFile(null);
+        // selectedFile && uploadPhoto(result.id, formData);
+        // history.push("/app/collection-list");
+        // setSelectedFile(null);
+        console.log("uploaded");
       })
       .catch((error) => {
         console.log(error);
@@ -36,44 +66,25 @@ export default function CollectionRegistration() {
       <div className="hero-body">
         <div className="container">
           <br />
-          <form onSubmit={handleClick}>
+          <form onSubmit={handleClick} encType="multipart/form-data">
             <Form register={register} />
+
+            <br />
             <div className="field is-grouped">
               <div className="control">
-                <div className="file is-info is-centered is-small">
-                  <label className="file-label">
-                    <input
-                      className="file-input"
-                      type="file"
-                      name="file"
-                      onChange={(e) => setSelectedFile(e.target.files[0])}
-                    />
-                    <span className="file-cta">
-                      <span className="file-icon">
-                        <i className="fas fa-cloud-upload-alt"></i>
-                      </span>
-                      <span className="file-label"> Зураг хавсаргах… </span>
-                    </span>
-                  </label>
-                </div>
-                <br />
-                <div className="field is-grouped">
-                  <div className="control">
-                    <button className="button is-link">Хадгалах</button>
-                  </div>
-                  {error && (
-                    <div
-                      className="notification is-warning  "
-                      style={{
-                        color: "red",
-                        padding: "0.5rem  1rem 0rem 1rem",
-                      }}
-                    >
-                      {error}
-                    </div>
-                  )}
-                </div>
+                <button className="button is-link">Хадгалах</button>
               </div>
+              {error && (
+                <div
+                  className="notification is-warning  "
+                  style={{
+                    color: "red",
+                    padding: "0.5rem  1rem 0rem 1rem",
+                  }}
+                >
+                  {error}
+                </div>
+              )}
             </div>
           </form>
         </div>
